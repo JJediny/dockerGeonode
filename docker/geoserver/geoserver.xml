@@ -1,0 +1,13 @@
+<Context path="/geoserver"
+    antiResourceLocking="false" >
+  <Parameter name="org.geonode.security.databaseSecurityClient.url"
+    value="jdbc:postgresql://postgis:5432/geonode?user=geonode&amp;password=geonode"/>
+</Context>
+<Context>
+  <Parameter name="GEONODE_BASE_URL"
+    value="http://localhost/"/>
+</Context>
+<Context>
+  <Parameter name="GEOSERVER_DATA_DIR"
+    value="/opt/geoserver/data_dir"/>
+</Context>

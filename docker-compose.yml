@@ -1,0 +1,48 @@
+postgis:
+  build: docker/postgis/
+  hostname: postgis
+  ports:
+    - "5432:5432"
+  volumes:
+    - ./postgres_data:/var/lib/postgresql
+
+geoserver:
+  build: docker/geoserver/
+  hostname: geoserver
+  links:
+    - postgis
+  environment:
+      - JAVA_OPTS='-Xmx1g'
+      - Xmx=2048M
+      - XX:MaxPermSize=256M
+  ports:
+    - 8090:8090
+    - 8080:8080
+  volumes:
+    - ./geoserver_data:/opt/geoserver/data_dir
+
+geonode:
+  build: .
+  hostname: geonode
+  links:
+    - postgis
+  ports:
+    - 8000:8000
+  volumes:
+    - .:/opt/geonode/
+  entrypoint:
+    - /usr/bin/python
+  command: manage.py runserver 0.0.0.0:8000
+
+
+nginx:
+  image: nginx:latest
+  hostname: nginx
+  ports:
+    - 80:80
+  links:
+    - geonode
+    - geoserver
+    - postgis
+  volumes:
+    - ./docker/nginx:/etc/nginx
